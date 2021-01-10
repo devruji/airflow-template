@@ -129,4 +129,6 @@ dmypy.json
 .pyre/
 
 # Bossruji
-mnt
+mnt/airflow/logs/*
+mnt/postgres/*
+mnt/redis/*
