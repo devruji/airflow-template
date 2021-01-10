@@ -1,0 +1,111 @@
+version: "3.8"
+services:
+
+######################################################
+# Result Backend
+######################################################
+  redis:
+    image: 'redis:6.0-alpine'
+    restart: always
+    container_name: redis
+    volumes:
+      - ./mnt/redis:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: [ "CMD", "echo", "0" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+######################################################
+# AIRFLOW
+######################################################
+  airflow:
+    image: apache/airflow:v1-10-stable-python3.8
+    restart: always
+    container_name: airflow
+    environment:
+      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+    volumes:
+      - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/dags:/opt/airflow/dags
+      - ./mnt/airflow/logs:/opt/airflow/logs
+    ports:
+      - 8080:8080
+    command: ["webserver"]
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "airflow", "8080" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+  scheduler:
+    image: apache/airflow:v1-10-stable-python3.8
+    restart: always
+    container_name: airflow-scheduler
+    volumes:
+      - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/dags:/opt/airflow/dags
+      - ./mnt/airflow/logs:/opt/airflow/logs
+    command: ["scheduler"]
+    healthcheck:
+      test: [ "CMD", "echo", "0" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+  worker:
+    image: apache/airflow:v1-10-stable-python3.8
+    restart: always
+    container_name: airflow-worker
+    volumes:
+      - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/dags:/opt/airflow/dags
+      - ./mnt/airflow/logs:/opt/airflow/logs
+    command: ["celery", "worker"]
+    healthcheck:
+      test: [ "CMD", "echo", "0" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+  flower:
+    image: apache/airflow:v1-10-stable-python3.8
+    restart: always
+    container_name: airflow-flower
+    # entrypoint: ["./scripts/init_db.sh"]
+    depends_on:
+      - redis
+      - scheduler
+    ports:
+      - "5555:5555"
+    command: ["celery", "flower"]
+    volumes:
+      - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/dags:/opt/airflow/dags
+      - ./mnt/airflow/logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "flower", "5555" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+# ######################################################
+# # EMAIL SERVICE
+# ######################################################
+#   mailhog:
+#     image: mailhog/mailhog
+#     container_name: mailhog
+#     ports:
+#       - "1025:1025"
+#       - "8025:8025"
+
+######################################################
+# NETWORK
+######################################################
+networks:
+  default:
+    name: airflow-network
+    external:
+      name: airflow-template_pgsite

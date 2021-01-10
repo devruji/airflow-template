@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+######################################################
+# DATABASE SERVICE
+######################################################
+  airflow-metastore:
+    image: postgres:13.1-alpine
+    restart: always
+    container_name: airflow-metastore
+    volumes:
+      - ./mnt/postgres:/var/lib/postgresql/data/pgdata
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow_db
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    networks:
+      - pgsite
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "airflow_db", "-U", "airflow" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+######################################################
+# DATABASE INTERFACE
+######################################################
+  pgadmin:
+    depends_on:
+      - airflow-metastore
+    image: dpage/pgadmin4
+    restart: always
+    container_name: pgadmin
+    volumes:
+      - pg4volume:/var/lib/pgadmin
+    ports:
+      - "8081:5050"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@domain.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_LISTEN_PORT: 5050
+    networks:
+      - pgsite
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "pgadmin", "8081"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+networks:
+  pgsite:
+    driver: bridge
+
+volumes:
+  pg4volume:
