@@ -134,3 +134,4 @@ mnt/airflo!w/logs/
 mnt/postgres/*
 mnt/redis/*
 mnt/airflow/logs/scheduler/latest
+.vscode/
