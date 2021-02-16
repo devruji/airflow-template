@@ -8,6 +8,9 @@ services:
     image: 'redis:6.0-alpine'
     restart: unless-stopped
     container_name: redis
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./mnt/redis:/data
     command: ["redis-server", "--appendonly", "yes"]
@@ -21,7 +24,7 @@ services:
 # AIRFLOW
 ######################################################
   airflow:
-    image: apache/airflow:2.0.0-python3.8
+    image: airflow2.0-template-bossruji:v1
     restart: unless-stopped
     container_name: airflow
     environment:
@@ -30,8 +33,10 @@ services:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
       - ./mnt/airflow/dags:/opt/airflow/dags
       - ./mnt/airflow/logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
     ports:
       - 8080:8080
+    # entrypoint: ["./scripts/init_db.sh"]
     command: ["webserver"]
     healthcheck:
       test: [ "CMD", "nc", "-z", "airflow", "8080" ]
@@ -40,7 +45,7 @@ services:
       retries: 10
 
   scheduler:
-    image: apache/airflow:2.0.0-python3.8
+    image: airflow2.0-template-bossruji:v1
     restart: unless-stopped
     container_name: airflow-scheduler
     volumes:
@@ -55,7 +60,8 @@ services:
       retries: 10
 
   worker:
-    image: apache/airflow:2.0.0-python3.8
+    image: airflow2.0-template-bossruji:v1
+    # image: apache/airflow:2.0.0-python3.8
     restart: unless-stopped
     # container_name: airflow-worker
     volumes:
@@ -70,10 +76,9 @@ services:
       retries: 10
 
   flower:
-    image: apache/airflow:2.0.0-python3.8
+    image: airflow2.0-template-bossruji:v1
     restart: unless-stopped
     container_name: airflow-flower
-    # entrypoint: ["./scripts/init_db.sh"]
     depends_on:
       - redis
       - scheduler
@@ -84,7 +89,6 @@ services:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
       - ./mnt/airflow/dags:/opt/airflow/dags
       - ./mnt/airflow/logs:/opt/airflow/logs
-      - ./scripts:/opt/airflow/scripts
     healthcheck:
       test: [ "CMD", "nc", "-z", "flower", "5555" ]
       timeout: 45s

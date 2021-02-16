@@ -10,6 +10,7 @@ services:
     container_name: airflow-metastore
     volumes:
       - ./mnt/postgres:/var/lib/postgresql/data/pgdata
+      - ./mnt/postgres:/var/lib/postgresql/data/log
     environment:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
@@ -17,6 +18,12 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
+    command: >
+     postgres
+       -c listen_addresses=*
+       -c logging_collector=on
+       -c log_destination=stderr
+       -c max_connections=200
     networks:
       - pgsite
     healthcheck:

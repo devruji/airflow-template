@@ -9,8 +9,8 @@ from airflow.macros import ds_format
 
 def get_date_part(ds, **kwargs):
     print('ds >>', ds)
-    print('ds_format >>', ds_format(ds, '%Y-%m-%d', '%Y/%m/%d/'))
-    return ds_format(ds, '%Y-%m-%d', '%Y/%m/%d/')
+    print('ds_format >>', ds_format(ds, '%Y-%m-%d', '%Y/%m/%d'))
+    return ds_format(ds, '%Y-%m-%d', '%Y/%m/%d')
 
 default_args = {
     'owner': 'bossruji',
@@ -39,8 +39,8 @@ with DAG(
         'test_print_datetime',
          default_args=default_args,
          description='A simple pipeline to print out current datetime',
-         schedule_interval='*/5 * * * *', # 12:30 PM TH Time Zone
-         start_date=datetime(2021, 2, 14),
+         schedule_interval='0 * * * *', # 12:30 PM TH Time Zone
+         start_date=datetime(2021, 2, 15),
          tags=['print-dt']
         ) as dag:
 
