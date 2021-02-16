@@ -6,7 +6,7 @@ services:
 ######################################################
   redis:
     image: 'redis:6.0-alpine'
-    restart: always
+    restart: unless-stopped
     container_name: redis
     volumes:
       - ./mnt/redis:/data
@@ -21,8 +21,8 @@ services:
 # AIRFLOW
 ######################################################
   airflow:
-    image: apache/airflow:v1-10-stable-python3.8
-    restart: always
+    image: apache/airflow:2.0.0-python3.8
+    restart: unless-stopped
     container_name: airflow
     environment:
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
@@ -40,8 +40,8 @@ services:
       retries: 10
 
   scheduler:
-    image: apache/airflow:v1-10-stable-python3.8
-    restart: always
+    image: apache/airflow:2.0.0-python3.8
+    restart: unless-stopped
     container_name: airflow-scheduler
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
@@ -55,9 +55,9 @@ services:
       retries: 10
 
   worker:
-    image: apache/airflow:v1-10-stable-python3.8
-    restart: always
-    container_name: airflow-worker
+    image: apache/airflow:2.0.0-python3.8
+    restart: unless-stopped
+    # container_name: airflow-worker
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
       - ./mnt/airflow/dags:/opt/airflow/dags
@@ -70,8 +70,8 @@ services:
       retries: 10
 
   flower:
-    image: apache/airflow:v1-10-stable-python3.8
-    restart: always
+    image: apache/airflow:2.0.0-python3.8
+    restart: unless-stopped
     container_name: airflow-flower
     # entrypoint: ["./scripts/init_db.sh"]
     depends_on:
