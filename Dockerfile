@@ -25,11 +25,7 @@ RUN apt-get update \
 USER airflow
 
 # Install airflow packages
-RUN pip install --user apache-airflow[apache.hive]
-RUN pip install --user apache-airflow[odbc]
-RUN pip install --user apache-airflow[microsoft.mssql]
-RUN pip install --user apache-airflow[presto]
-RUN pip install --user apache-airflow[postgres]
+RUN pip install --no-cache-dir --user apache-airflow[apache.hive,odbc,microsoft.mssql,presto,postgres]==2.0.0 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.0.0/constraints-3.8.txt
 
 # Install bossruji's plugin dependencies
-RUN pip install --user pandas
+# RUN pip install --user pandas
