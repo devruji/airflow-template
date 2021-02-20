@@ -31,6 +31,7 @@ services:
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/webserver_config.py:/opt/airflow/webserver_config.py
       - ./mnt/airflow/dags:/opt/airflow/dags
       - ./mnt/airflow/logs:/opt/airflow/logs
       - ./scripts:/opt/airflow/scripts
@@ -50,6 +51,7 @@ services:
     container_name: airflow-scheduler
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/webserver_config.py:/opt/airflow/webserver_config.py
       - ./mnt/airflow/dags:/opt/airflow/dags
       - ./mnt/airflow/logs:/opt/airflow/logs
     command: ["scheduler"]
@@ -66,6 +68,7 @@ services:
     # container_name: airflow-worker
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/webserver_config.py:/opt/airflow/webserver_config.py
       - ./mnt/airflow/dags:/opt/airflow/dags
       - ./mnt/airflow/logs:/opt/airflow/logs
     command: ["celery", "worker"]
@@ -87,6 +90,7 @@ services:
     command: ["celery", "flower"]
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./mnt/airflow/webserver_config.py:/opt/airflow/webserver_config.py
       - ./mnt/airflow/dags:/opt/airflow/dags
       - ./mnt/airflow/logs:/opt/airflow/logs
     healthcheck:

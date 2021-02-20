@@ -1,18 +1,59 @@
 import json
 import requests
+import pandas as pd
 
 from datetime import datetime, timedelta
 
 from airflow import DAG
-# from airflow.providers.microsoft.mssql.hooks.mssql import MsSqlHook
 from airflow.providers.presto.hooks.presto import PrestoHook
 from airflow.operators.python import PythonOperator
 
 
 def get_data_from_e2e():
     ph_hook = PrestoHook(presto_conn_id='prd-bdp-presto-e2e-bossruji')
-    sql = "SELECT count(1) AS num FROM airflow.static_babynames"
-    data = ph_hook.get_records(sql)
+    sql = '''
+            WITH tmp AS (
+                SELECT
+                    product,
+                    mtype,
+                    asmdate,
+                    COUNT(DISTINCT(hddsn)) AS n_serial_num,
+                    CASE WHEN pfcode = '0000' THEN 'P' ELSE 'F' END AS drive_pass_fail,
+                    procid || ' - ' || pfcode AS station_failcode,
+                    SUM(COUNT(DISTINCT(hddsn))) OVER (PARTITION BY product, mtype, asmdate, procid) AS n_serial_num_loading,
+                    SUM(COUNT(DISTINCT(hddsn))) OVER (PARTITION BY product, mtype, asmdate, CASE WHEN pfcode = '0000' THEN 'P' ELSE 'F' END) AS n_serial_num_failure
+                FROM
+                    hive.vqaa.fact_hdd_association
+                WHERE
+                    enddt BETWEEN DATE_FORMAT(DATE_ADD('month', -2, CURRENT_DATE), '%Y%m%d') AND DATE_FORMAT(CURRENT_DATE, '%Y%m%d')
+                    AND product = 'vl6'
+                    AND mtype = 'VL66'
+                    AND site IN ('prb', 'bpi')
+                    AND asmdate BETWEEN DATE_FORMAT(DATE_ADD('month', -2, CURRENT_DATE), '%Y%m%d') AND DATE_FORMAT(CURRENT_DATE, '%Y%m%d')
+                    AND hddcycle = 1
+                    AND SUBSTRING(partflag, 7, 1) IN ('0')
+                    AND hddtrial NOT BETWEEN 'A000' AND 'LZZZ'
+                    AND SUBSTRING(dpcode, 1, 1) NOT IN ('R', 'Z')
+                    AND procid IN ('6400','6600','6800')
+                GROUP BY mtype, product, asmdate, CASE WHEN pfcode = '0000' THEN 'P' ELSE 'F' END, procid || ' - ' || pfcode, procid)
+
+
+            SELECT
+                product,
+                mtype,
+                asmdate,
+                station_failcode,
+                n_serial_num_loading AS n_loading,
+                n_serial_num AS n_failed,
+                ROUND((n_serial_num * 100.0) / n_serial_num_loading, 3) as failre_rate,
+                ROUND((n_serial_num * 100.0) / n_serial_num_failure, 3) as failre_pareto
+            FROM tmp
+            WHERE drive_pass_fail <> 'P'
+            ORDER BY asmdate DESC, 
+                n_failed DESC
+    '''
+    # data = ph_hook.get_records(sql)
+    data = ph_hook.get_pandas_df(sql)
     print(data)
 
     return data
@@ -81,7 +122,7 @@ with DAG(
          default_args=default_args,
          description='A simple data pipeline to etl data for monitor failure pareto in enterprise products',
          schedule_interval='@daily', # 12:30 PM TH Time Zone
-         start_date=datetime(2021, 2, 14),
+         start_date=datetime(2021, 2, 16),
          tags=['ent-top5-fr-pareto']
         ) as dag:
 
