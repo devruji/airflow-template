@@ -129,12 +129,9 @@ dmypy.json
 .pyre/
 
 # Bossruji
-mnt/*
-mnt/airflo!w/logs/
-mnt/airflo!w/logs/
+mnt/airflow/*
+mnt/airflow/dags/*
+mnt/airflow/dags/db_drivers/*
+mnt/airflow/logs/*
 mnt/postgres/*
 mnt/redis/*
-mnt/airflow/logs/scheduler/latest
-.vscode/
-
-mnt/airflow/dags/
