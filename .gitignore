@@ -136,4 +136,6 @@ mnt/redis/*
 mnt/airflow/logs/scheduler/latest
 .vscode/
 
-mnt/airflow/dags/*.py
+mnt/airflow/dags/
+
+mnt/*
