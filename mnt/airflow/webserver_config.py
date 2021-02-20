@@ -78,19 +78,16 @@ AUTH_USER_REGISTRATION_ROLE = 'Viewer'
 # }]
 
 # When using LDAP Auth, setup the ldap server
-AUTH_LDAP_SERVER = 'ldaps://ldap.ad.shared:636'
-AUTH_LDAP_USE_TLS = False # Forward to port 636 -> Set to True forward to 389
-AUTH_LDAP_SEARCH = 'DC=ad,DC=shared'
-# AUTH_LDAP_SEARCH_FILTER = f'(mail={".".join(map(str, [x.capitalize() for x in username.split(".")]))})'
+AUTH_LDAP_SERVER = 'ldaps://ldap.ad.shared'
+AUTH_LDAP_USE_TLS = False
+AUTH_LDAP_ALLOW_SELF_SIGNED = True
 AUTH_LDAP_BIND_USER = 'CN=Rujikorn Ngoensaard 1000277233,OU=TBB,OU=Thailand,OU=StdUsers,OU=UsersAndGroups,OU=Accounts,DC=ad,DC=shared'
 AUTH_LDAP_BIND_PASSWORD = "86Ii60bdig'boltvkf"
+AUTH_LDAP_SEARCH = 'OU=UsersAndGroups,OU=Accounts,DC=ad,DC=shared'
+AUTH_LDAP_UID_FIELD = 'userPrincipalName'
 AUTH_LDAP_FIRSTNAME_FIELD = 'givenName'
 AUTH_LDAP_LASTNAME_FIELD = 'sn'
 AUTH_LDAP_EMAIL_FIELD = 'mail'
-AUTH_LDAP_UID_FIELD = 'uid'
-# AUTH_LDAP_USE_TLS = False
-# AUTH_LDAP_ALLOW_SELF_SIGNED = False
-# AUTH_LDAP_TLS_CACERTFILE = '/etc/ssl/certs/ldap.crt'
 
 # When using OpenID Auth, uncomment to setup OpenID providers.
 # example for OpenID authentication
