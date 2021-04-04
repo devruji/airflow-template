@@ -78,12 +78,12 @@ AUTH_USER_REGISTRATION_ROLE = 'Viewer'
 # }]
 
 # When using LDAP Auth, setup the ldap server
-AUTH_LDAP_SERVER = 'ldaps://ldap.ad.shared'
+AUTH_LDAP_SERVER = 'ldaps://WDADLDS.hitachigst.global'
 AUTH_LDAP_USE_TLS = False
 AUTH_LDAP_ALLOW_SELF_SIGNED = True
-AUTH_LDAP_BIND_USER = 'CN=Rujikorn Ngoensaard 1000277233,OU=TBB,OU=Thailand,OU=StdUsers,OU=UsersAndGroups,OU=Accounts,DC=ad,DC=shared'
-AUTH_LDAP_BIND_PASSWORD = "86Ii60bdig'boltvkf"
-AUTH_LDAP_SEARCH = 'OU=UsersAndGroups,OU=Accounts,DC=ad,DC=shared'
+AUTH_LDAP_BIND_USER = 'CN=svc-rss-sp,OU=Bind Users,DC=hitachigst,DC=global'
+AUTH_LDAP_BIND_PASSWORD = 'Zk7GUwqemX4ZAGsZ'
+AUTH_LDAP_SEARCH = 'OU=User-Groups,DC=hitachigst,DC=global'
 AUTH_LDAP_UID_FIELD = 'userPrincipalName'
 AUTH_LDAP_FIRSTNAME_FIELD = 'givenName'
 AUTH_LDAP_LASTNAME_FIELD = 'sn'

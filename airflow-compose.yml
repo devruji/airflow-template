@@ -5,7 +5,7 @@ services:
 # Result Backend
 ######################################################
   redis:
-    image: 'redis:6.0-alpine'
+    image: 'redis:6.2.1-alpine'
     restart: unless-stopped
     container_name: redis
     environment:
@@ -24,9 +24,9 @@ services:
 # AIRFLOW
 ######################################################
   airflow:
-    image: airflow2.0-template-bossruji:v1
+    image: airflow-local
     restart: unless-stopped
-    container_name: airflow
+    container_name: airflow-webserver
     environment:
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
     volumes:
@@ -37,7 +37,6 @@ services:
       - ./scripts:/opt/airflow/scripts
     ports:
       - 8080:8080
-    # entrypoint: ["./scripts/init_db.sh"]
     command: ["webserver"]
     healthcheck:
       test: [ "CMD", "nc", "-z", "airflow", "8080" ]
@@ -46,7 +45,7 @@ services:
       retries: 10
 
   scheduler:
-    image: airflow2.0-template-bossruji:v1
+    image: airflow-local
     restart: unless-stopped
     container_name: airflow-scheduler
     volumes:
@@ -62,10 +61,8 @@ services:
       retries: 10
 
   worker:
-    image: airflow2.0-template-bossruji:v1
-    # image: apache/airflow:2.0.0-python3.8
+    image: airflow-local
     restart: unless-stopped
-    # container_name: airflow-worker
     volumes:
       - ./mnt/airflow/airflow.cfg:/opt/airflow/airflow.cfg
       - ./mnt/airflow/webserver_config.py:/opt/airflow/webserver_config.py
@@ -79,7 +76,7 @@ services:
       retries: 10
 
   flower:
-    image: airflow2.0-template-bossruji:v1
+    image: airflow-local
     restart: unless-stopped
     container_name: airflow-flower
     depends_on:
