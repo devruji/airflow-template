@@ -3,3 +3,7 @@ README.md
 LICENSE
 .vscode
 __pycahce__
+/dags
+/logs
+/plugins
+*.sh
