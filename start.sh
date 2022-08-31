@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/zsh
 
-docker-compose -f airflow-compose.yml up --scale worker=4 -d
+docker-compose up --scale airflow-worker=1 -d

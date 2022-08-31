@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/zsh
 
-docker-compose -f airflow-compose.yml down
+docker-compose down
