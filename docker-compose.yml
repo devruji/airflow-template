@@ -108,8 +108,8 @@ services:
     restart: always
   airflow-cli:
     <<: *airflow-common
-    profiles:
-      - debug
+    # profiles:
+    #   - debug
     environment:
       <<: *airflow-common-env
       CONNECTION_CHECK_MAX_COUNT: "0"
