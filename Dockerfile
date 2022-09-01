@@ -1,5 +1,9 @@
 FROM apache/airflow:2.3.4
 
+USER root
+
+COPY airflow.cfg /opt/airflow/airflow.cfg
+
 USER airflow
 
 # Update pip
