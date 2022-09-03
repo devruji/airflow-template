@@ -130,3 +130,4 @@ dmypy.json
 
 # Bossruji
 mnt/*
+.DS_Store
