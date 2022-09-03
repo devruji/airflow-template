@@ -40,3 +40,4 @@ Cr: [Marc lamberti @linkedin](https://www.linkedin.com/posts/marclamberti_dataen
 - [https://airflow.apache.org/](https://airflow.apache.org/)
 - [YAML Template](https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml)
 - [Airflow CLI](#airflow-cli) - [Marc lamberti @linkedin](https://www.linkedin.com/posts/marclamberti_airflow-dataengineering-dataengineer-activity-6966051745110093825-CkOt)
+- [Command line cheat sheet](https://levelup.gitconnected.com/airflow-command-line-interface-cli-cheat-sheet-6e5d90bd3552)
