@@ -5,6 +5,8 @@ long learn apache-airflow
 ## Get Started
 
 ```bash
+docker build . -t airflow-dev:local
+
 start.sh
 ```
 
