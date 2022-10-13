@@ -5,15 +5,17 @@ long learn apache-airflow
 ## Get Started
 
 ```bash
-docker build . -t airflow-dev:local
+$ docker build . -t airflow-dev:local
 
-start.sh
+$ docker compose up --profile upgrade up
+
+$ start.sh
 ```
 
 or
 
 ```bash
-curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.4.1/docker-compose.yaml'
+$ curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.4.1/docker-compose.yaml'
 ```
 
 ## Airflow CLI
