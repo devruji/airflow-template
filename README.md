@@ -1,15 +1,18 @@
 # Airflow template
+
 long learn apache-airflow
 
 ## Get Started
+
 ```bash
 start.sh
 ```
+
 or
-![image](https://user-images.githubusercontent.com/43924465/187859368-39264548-65c5-4911-9eb4-5b7d2d8f5bb4.png)
 
-Cr: [Marc lamberti @linkedin](https://www.linkedin.com/posts/marclamberti_dataengineer-airflow-dataengineering-activity-6970022178763194369-H_PJ?utm_source=share&utm_medium=member_desktop)
-
+```bash
+curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.4.1/docker-compose.yaml'
+```
 
 ## Airflow CLI
 
@@ -36,7 +39,9 @@ Cr: [Marc lamberti @linkedin](https://www.linkedin.com/posts/marclamberti_dataen
 
 👉 `airflow dags test my_dag 2022-01-01`<br />
 💡 Execute a single DAG Run for a DAG; Test your DAG first
+
 ## Ref:
+
 - [https://airflow.apache.org/](https://airflow.apache.org/)
 - [YAML Template](https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml)
 - [Airflow CLI](#airflow-cli) - [Marc lamberti @linkedin](https://www.linkedin.com/posts/marclamberti_airflow-dataengineering-dataengineer-activity-6966051745110093825-CkOt)
